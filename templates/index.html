@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVD Risk Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- TOP TRUST BAR -->
+    <div class="trust-bar">
+        <span>🔬 Based on the Framingham Heart Study</span>
+        <span class="divider">|</span>
+        <span>📊 Logistic Regression ML Model</span>
+        <span class="divider">|</span>
+        <span>🎓 Landmark University · Computer Science Research</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <div class="logo-mark">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <rect width="28" height="28" rx="8" fill="#c0392b"/>
+                        <path d="M14 6 C10 6 7 9 7 12.5 C7 17 14 22 14 22 C14 22 21 17 21 12.5 C21 9 18 6 14 6Z" fill="white"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">CVD Risk Predictor</span>
+                    <span class="logo-sub">Cardiovascular Disease Risk Assessment</span>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="nav-badge">⚕️ Research Tool Only</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-left">
+                <div class="hero-badge">10-Year Risk Assessment</div>
+                <h1>Stay Informed.<br><span class="highlight">Stay Ahead.</span></h1>
+                <p>Understanding your cardiovascular health today is the first step to protecting it tomorrow. Enter your clinical details and receive a personalised risk assessment powered by machine learning.</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-num">4,238</span>
+                        <span class="stat-label">Patient Records</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-num">14</span>
+                        <span class="stat-label">Clinical Factors</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-num">67%</span>
+                        <span class="stat-label">Model Accuracy</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="info-card">
+                    <div class="info-card-title">⚠️ Important Notice</div>
+                    <p>This tool is designed for <strong>health awareness and educational purposes only.</strong> It does not constitute a medical diagnosis.</p>
+                    <p>Results should be discussed with a qualified healthcare professional before making any health decisions.</p>
+                    <div class="info-card-footer">
+                        <span>🏥 Always consult your doctor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="main-inner">
+
+            <!-- LEFT: FORM -->
+            <div class="form-col">
+                <form id="predictionForm">
+
+                    <!-- SECTION 1 -->
+                    <div class="section-block">
+                        <div class="section-label">
+                            <span class="section-num">01</span>
+                            <span>Personal Information</span>
+                        </div>
+                        <div class="card">
+                            <div class="form-grid two-col">
+                                <div class="form-group">
+                                    <label>Sex</label>
+                                    <select name="male">
+                                        <option value="1">Male</option>
+                                        <option value="0">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Age <span class="unit">years</span></label>
+                                    <input type="number" name="age" placeholder="45" min="18" max="100" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2 -->
+                    <div class="section-block">
+                        <div class="section-label">
+                            <span class="section-num">02</span>
+                            <span>Lifestyle Factors</span>
+                        </div>
+                        <div class="card">
+                            <div class="form-grid two-col">
+                                <div class="form-group">
+                                    <label>Current Smoker</label>
+                                    <select name="currentSmoker">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cigarettes / Day <span class="unit">0 if non-smoker</span></label>
+                                    <input type="number" name="cigsPerDay" placeholder="0" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3 -->
+                    <div class="section-block">
+                        <div class="section-label">
+                            <span class="section-num">03</span>
+                            <span>Medical History</span>
+                        </div>
+                        <div class="card">
+                            <div class="form-grid two-col">
+                                <div class="form-group">
+                                    <label>On BP Medication</label>
+                                    <select name="BPMeds">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Previous Stroke</label>
+                                    <select name="prevalentStroke">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Hypertension</label>
+                                    <select name="prevalentHyp">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Diabetes</label>
+                                    <select name="diabetes">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4 -->
+                    <div class="section-block">
+                        <div class="section-label">
+                            <span class="section-num">04</span>
+                            <span>Clinical Measurements</span>
+                        </div>
+                        <div class="card">
+                            <div class="form-grid three-col">
+                                <div class="form-group">
+                                    <label>Total Cholesterol <span class="unit">mg/dL</span></label>
+                                    <input type="number" name="totChol" placeholder="200" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Systolic BP <span class="unit">mmHg</span></label>
+                                    <input type="number" name="sysBP" placeholder="120" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Diastolic BP <span class="unit">mmHg</span></label>
+                                    <input type="number" name="diaBP" placeholder="80" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>BMI <span class="unit">kg/m²</span></label>
+                                    <input type="number" name="BMI" placeholder="25.0" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Heart Rate <span class="unit">bpm</span></label>
+                                    <input type="number" name="heartRate" placeholder="75" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Glucose Level <span class="unit">mg/dL</span></label>
+                                    <input type="number" name="glucose" placeholder="85" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Run Risk Assessment</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+
+                </form>
+            </div>
+
+            <!-- RIGHT: SIDEBAR -->
+            <aside class="sidebar">
+
+                <!-- RESULT BOX -->
+                <div class="result-card" id="resultBox" style="display:none;">
+                    <div class="result-top" id="resultTop">
+                        <div class="result-tag">Assessment Result</div>
+                        <div class="result-emoji" id="resultEmoji"></div>
+                        <div class="risk-level" id="riskLevel"></div>
+                        <div class="risk-sub">10-year CVD probability</div>
+                        <div class="prob-display" id="probability"></div>
+                    </div>
+                    <div class="prob-bar-wrap">
+                        <div class="prob-bar-labels">
+                            <span>Low</span><span>Moderate</span><span>High</span>
+                        </div>
+                        <div class="prob-bar-track">
+                            <div class="prob-bar-fill" id="probBar"></div>
+                        </div>
+                    </div>
+                    <div class="result-msg-wrap">
+                        <div class="result-msg-label">Clinical Guidance</div>
+                        <p class="result-msg" id="resultMessage"></p>
+                    </div>
+                    <div class="result-disclaimer">
+                        ⚠️ For awareness only. Not a clinical diagnosis. Consult a qualified physician for medical advice.
+                    </div>
+                </div>
+
+                <!-- REFERENCE CARD -->
+                <div class="ref-card" id="refCard">
+                    <div class="ref-title">📋 Healthy Reference Ranges</div>
+                    <div class="ref-list">
+                        <div class="ref-item">
+                            <span class="ref-name">Total Cholesterol</span>
+                            <span class="ref-val">Below 200 mg/dL</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-name">Systolic BP</span>
+                            <span class="ref-val">Below 120 mmHg</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-name">Diastolic BP</span>
+                            <span class="ref-val">Below 80 mmHg</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-name">BMI</span>
+                            <span class="ref-val">18.5 – 24.9</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-name">Heart Rate</span>
+                            <span class="ref-val">60 – 100 bpm</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-name">Fasting Glucose</span>
+                            <span class="ref-val">70 – 99 mg/dL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RISK FACTORS CARD -->
+                <div class="ref-card">
+                    <div class="ref-title">⚠️ Key CVD Risk Factors</div>
+                    <div class="risk-factors">
+                        <div class="rf-item rf-high">High blood pressure</div>
+                        <div class="rf-item rf-high">Smoking</div>
+                        <div class="rf-item rf-mid">High cholesterol</div>
+                        <div class="rf-item rf-mid">Diabetes</div>
+                        <div class="rf-item rf-mid">Obesity (BMI &gt; 30)</div>
+                        <div class="rf-item rf-low">Physical inactivity</div>
+                        <div class="rf-item rf-low">Age over 55</div>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <strong>CVD Risk Predictor</strong> · Landmark University, Dept. of Computer Science
+            </div>
+            <div class="footer-right">
+                Research & Educational Use Only · Not for Clinical Application
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
