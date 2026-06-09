@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVD Risk Predictor</title>
+    <title>Heart Disease Risk Predictor</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -11,9 +11,9 @@
 
     <!-- TOP TRUST BAR -->
     <div class="trust-bar">
-        <span>🔬 Based on the Framingham Heart Study</span>
+        <span>🔬 UCI Heart Disease Dataset · Cleveland Clinic</span>
         <span class="divider">|</span>
-        <span>📊 Random Forest ML Model</span>
+        <span>📊 Random Forest · 83.6% Accuracy</span>
         <span class="divider">|</span>
         <span>🎓 Landmark University · Computer Science Research</span>
     </div>
@@ -29,8 +29,8 @@
                     </svg>
                 </div>
                 <div class="logo-text">
-                    <span class="logo-title">CVD Risk Predictor</span>
-                    <span class="logo-sub">Cardiovascular Disease Risk Assessment</span>
+                    <span class="logo-title">Heart Disease Risk Predictor</span>
+                    <span class="logo-sub">UCI Cleveland Dataset · Cardiovascular Risk Assessment</span>
                 </div>
             </div>
             <div class="nav-right">
@@ -43,23 +43,28 @@
     <section class="hero">
         <div class="hero-inner">
             <div class="hero-left">
-                <div class="hero-badge">10-Year Risk Assessment</div>
-                <h1>Stay Informed.<br><span class="highlight">Stay Ahead.</span></h1>
-                <p>Understanding your cardiovascular health today is the first step to protecting it tomorrow. Enter your clinical details and receive a personalised risk assessment powered by machine learning.</p>
+                <div class="hero-badge">Clinical Risk Assessment</div>
+                <h1>Know Your Heart.<br><span class="highlight">Act Before It's Late.</span></h1>
+                <p>Enter your clinical measurements and receive an instant heart disease risk assessment powered by a Random Forest model trained on the UCI Heart Disease dataset — one of the most studied cardiology benchmarks.</p>
                 <div class="hero-stats">
                     <div class="stat">
-                        <span class="stat-num">4,238</span>
+                        <span class="stat-num">303</span>
                         <span class="stat-label">Patient Records</span>
                     </div>
                     <div class="stat-divider"></div>
                     <div class="stat">
-                        <span class="stat-num">14</span>
-                        <span class="stat-label">Clinical Factors</span>
+                        <span class="stat-num">13</span>
+                        <span class="stat-label">Clinical Features</span>
                     </div>
                     <div class="stat-divider"></div>
                     <div class="stat">
-                        <span class="stat-num">78%</span>
+                        <span class="stat-num">83.6%</span>
                         <span class="stat-label">Model Accuracy</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-num">97%</span>
+                        <span class="stat-label">Recall (RF)</span>
                     </div>
                 </div>
             </div>
@@ -67,9 +72,9 @@
                 <div class="info-card">
                     <div class="info-card-title">⚠️ Important Notice</div>
                     <p>This tool is designed for <strong>health awareness and educational purposes only.</strong> It does not constitute a medical diagnosis.</p>
-                    <p>Results should be discussed with a qualified healthcare professional before making any health decisions.</p>
+                    <p>Results are based on the Cleveland Heart Disease dataset patterns and should be reviewed with a qualified healthcare professional.</p>
                     <div class="info-card-footer">
-                        <span>🏥 Always consult your doctor</span>
+                        <span>🏥 Always consult your cardiologist</span>
                     </div>
                 </div>
             </div>
@@ -84,7 +89,7 @@
             <div class="form-col">
                 <form id="predictionForm">
 
-                    <!-- SECTION 1 -->
+                    <!-- SECTION 1: Personal -->
                     <div class="section-block">
                         <div class="section-label">
                             <span class="section-num">01</span>
@@ -93,114 +98,129 @@
                         <div class="card">
                             <div class="form-grid two-col">
                                 <div class="form-group">
+                                    <label>Age <span class="unit">years</span></label>
+                                    <input type="number" name="age" placeholder="54" min="18" max="100" required>
+                                </div>
+                                <div class="form-group">
                                     <label>Sex</label>
-                                    <select name="male">
+                                    <select name="sex">
                                         <option value="1">Male</option>
                                         <option value="0">Female</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>Age <span class="unit">years</span></label>
-                                    <input type="number" name="age" placeholder="45" min="18" max="100" required>
-                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- SECTION 2 -->
+                    <!-- SECTION 2: Symptoms -->
                     <div class="section-block">
                         <div class="section-label">
                             <span class="section-num">02</span>
-                            <span>Lifestyle Factors</span>
+                            <span>Symptoms &amp; Cardiac Tests</span>
                         </div>
                         <div class="card">
                             <div class="form-grid two-col">
                                 <div class="form-group">
-                                    <label>Current Smoker</label>
-                                    <select name="currentSmoker">
+                                    <label>Chest Pain Type <span class="unit">cp</span></label>
+                                    <select name="cp">
+                                        <option value="0">0 – Typical Angina</option>
+                                        <option value="1">1 – Atypical Angina</option>
+                                        <option value="2">2 – Non-Anginal Pain</option>
+                                        <option value="3">3 – Asymptomatic</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Exercise-Induced Angina</label>
+                                    <select name="exang">
                                         <option value="0">No</option>
                                         <option value="1">Yes</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Cigarettes / Day <span class="unit">0 if non-smoker</span></label>
-                                    <input type="number" name="cigsPerDay" placeholder="0" min="0" required>
+                                    <label>Resting ECG <span class="unit">restecg</span></label>
+                                    <select name="restecg">
+                                        <option value="0">0 – Normal</option>
+                                        <option value="1">1 – ST-T Wave Abnormality</option>
+                                        <option value="2">2 – LV Hypertrophy</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>ST Slope <span class="unit">slope</span></label>
+                                    <select name="slope">
+                                        <option value="0">0 – Upsloping</option>
+                                        <option value="1">1 – Flat</option>
+                                        <option value="2">2 – Downsloping</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- SECTION 3 -->
+                    <!-- SECTION 3: Measurements -->
                     <div class="section-block">
                         <div class="section-label">
                             <span class="section-num">03</span>
-                            <span>Medical History</span>
-                        </div>
-                        <div class="card">
-                            <div class="form-grid two-col">
-                                <div class="form-group">
-                                    <label>On BP Medication</label>
-                                    <select name="BPMeds">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Previous Stroke</label>
-                                    <select name="prevalentStroke">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Hypertension</label>
-                                    <select name="prevalentHyp">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Diabetes</label>
-                                    <select name="diabetes">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SECTION 4 -->
-                    <div class="section-block">
-                        <div class="section-label">
-                            <span class="section-num">04</span>
                             <span>Clinical Measurements</span>
                         </div>
                         <div class="card">
                             <div class="form-grid three-col">
                                 <div class="form-group">
-                                    <label>Total Cholesterol <span class="unit">mg/dL</span></label>
-                                    <input type="number" name="totChol" placeholder="200" required>
+                                    <label>Resting BP <span class="unit">mmHg</span></label>
+                                    <input type="number" name="trestbps" placeholder="130" min="80" max="220" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Systolic BP <span class="unit">mmHg</span></label>
-                                    <input type="number" name="sysBP" placeholder="120" required>
+                                    <label>Cholesterol <span class="unit">mg/dL</span></label>
+                                    <input type="number" name="chol" placeholder="245" min="100" max="600" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Diastolic BP <span class="unit">mmHg</span></label>
-                                    <input type="number" name="diaBP" placeholder="80" required>
+                                    <label>Max Heart Rate <span class="unit">bpm</span></label>
+                                    <input type="number" name="thalach" placeholder="150" min="60" max="220" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>BMI <span class="unit">kg/m²</span></label>
-                                    <input type="number" name="BMI" placeholder="25.0" step="0.1" required>
+                                    <label>ST Depression <span class="unit">oldpeak</span></label>
+                                    <input type="number" name="oldpeak" placeholder="1.0" step="0.1" min="0" max="10" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Heart Rate <span class="unit">bpm</span></label>
-                                    <input type="number" name="heartRate" placeholder="75" required>
+                                    <label>Vessels Coloured <span class="unit">ca (0–3)</span></label>
+                                    <select name="ca">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Glucose Level <span class="unit">mg/dL</span></label>
-                                    <input type="number" name="glucose" placeholder="85" required>
+                                    <label>Thalassemia <span class="unit">thal</span></label>
+                                    <select name="thal">
+                                        <option value="1">1 – Normal</option>
+                                        <option value="2">2 – Fixed Defect</option>
+                                        <option value="3">3 – Reversible Defect</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: Lab Results -->
+                    <div class="section-block">
+                        <div class="section-label">
+                            <span class="section-num">04</span>
+                            <span>Lab Results</span>
+                        </div>
+                        <div class="card">
+                            <div class="form-grid two-col">
+                                <div class="form-group">
+                                    <label>Fasting Blood Sugar <span class="unit">&gt; 120 mg/dL?</span></label>
+                                    <select name="fbs">
+                                        <option value="0">No (≤ 120 mg/dL)</option>
+                                        <option value="1">Yes (&gt; 120 mg/dL)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group helper-box">
+                                    <div class="helper-text">
+                                        <span class="helper-icon">ℹ️</span>
+                                        Fasting blood sugar above 120 mg/dL is a marker for diabetes and increased cardiovascular risk.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -223,7 +243,7 @@
                         <div class="result-tag">Assessment Result</div>
                         <div class="result-emoji" id="resultEmoji"></div>
                         <div class="risk-level" id="riskLevel"></div>
-                        <div class="risk-sub">10-year CVD probability</div>
+                        <div class="risk-sub">Heart disease probability</div>
                         <div class="prob-display" id="probability"></div>
                     </div>
                     <div class="prob-bar-wrap">
@@ -239,7 +259,7 @@
                         <p class="result-msg" id="resultMessage"></p>
                     </div>
                     <div class="result-disclaimer">
-                        ⚠️ For awareness only. Not a clinical diagnosis. Consult a qualified physician for medical advice.
+                        ⚠️ For awareness only. Not a clinical diagnosis. Consult a qualified cardiologist for medical advice.
                     </div>
                 </div>
 
@@ -248,43 +268,61 @@
                     <div class="ref-title">📋 Healthy Reference Ranges</div>
                     <div class="ref-list">
                         <div class="ref-item">
-                            <span class="ref-name">Total Cholesterol</span>
-                            <span class="ref-val">Below 200 mg/dL</span>
-                        </div>
-                        <div class="ref-item">
-                            <span class="ref-name">Systolic BP</span>
+                            <span class="ref-name">Resting BP</span>
                             <span class="ref-val">Below 120 mmHg</span>
                         </div>
                         <div class="ref-item">
-                            <span class="ref-name">Diastolic BP</span>
-                            <span class="ref-val">Below 80 mmHg</span>
+                            <span class="ref-name">Cholesterol</span>
+                            <span class="ref-val">Below 200 mg/dL</span>
                         </div>
                         <div class="ref-item">
-                            <span class="ref-name">BMI</span>
-                            <span class="ref-val">18.5 – 24.9</span>
+                            <span class="ref-name">Max Heart Rate</span>
+                            <span class="ref-val">≥ 220 − age (bpm)</span>
                         </div>
                         <div class="ref-item">
-                            <span class="ref-name">Heart Rate</span>
-                            <span class="ref-val">60 – 100 bpm</span>
-                        </div>
-                        <div class="ref-item">
-                            <span class="ref-name">Fasting Glucose</span>
+                            <span class="ref-name">Fasting Blood Sugar</span>
                             <span class="ref-val">70 – 99 mg/dL</span>
                         </div>
+                        <div class="ref-item">
+                            <span class="ref-name">ST Depression</span>
+                            <span class="ref-val">0.0 (none)</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-name">Vessels Coloured</span>
+                            <span class="ref-val">0 (ideal)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DATASET INFO CARD -->
+                <div class="ref-card dataset-card">
+                    <div class="ref-title">🔄 Dataset Upgrade</div>
+                    <div class="dataset-info">
+                        <div class="dataset-row">
+                            <div class="dataset-label">Previous</div>
+                            <div class="dataset-detail old">Framingham · 78% accuracy · imbalanced (15% positive)</div>
+                        </div>
+                        <div class="dataset-arrow">↓ upgraded to</div>
+                        <div class="dataset-row">
+                            <div class="dataset-label">Current</div>
+                            <div class="dataset-detail new">UCI Cleveland · 83.6% accuracy · balanced (54%/46%)</div>
+                        </div>
+                        <div class="dataset-note">97% recall — catches nearly all true heart disease cases</div>
                     </div>
                 </div>
 
                 <!-- RISK FACTORS CARD -->
                 <div class="ref-card">
-                    <div class="ref-title">⚠️ Key CVD Risk Factors</div>
+                    <div class="ref-title">⚠️ Key UCI Predictors</div>
                     <div class="risk-factors">
-                        <div class="rf-item rf-high">High blood pressure</div>
-                        <div class="rf-item rf-high">Smoking</div>
-                        <div class="rf-item rf-mid">High cholesterol</div>
-                        <div class="rf-item rf-mid">Diabetes</div>
-                        <div class="rf-item rf-mid">Obesity (BMI &gt; 30)</div>
-                        <div class="rf-item rf-low">Physical inactivity</div>
-                        <div class="rf-item rf-low">Age over 55</div>
+                        <div class="rf-item rf-high">Chest pain type</div>
+                        <div class="rf-item rf-high">ST depression</div>
+                        <div class="rf-item rf-high">Vessels coloured (ca)</div>
+                        <div class="rf-item rf-mid">Thalassemia type</div>
+                        <div class="rf-item rf-mid">Max heart rate</div>
+                        <div class="rf-item rf-mid">Exercise angina</div>
+                        <div class="rf-item rf-low">Age &amp; sex</div>
+                        <div class="rf-item rf-low">Cholesterol</div>
                     </div>
                 </div>
 
@@ -297,10 +335,10 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-left">
-                <strong>CVD Risk Predictor</strong> · Landmark University, Dept. of Computer Science
+                <strong>Heart Disease Risk Predictor</strong> · Landmark University, Dept. of Computer Science
             </div>
             <div class="footer-right">
-                Research & Educational Use Only · Not for Clinical Application
+                UCI Heart Disease Dataset (Cleveland) · Research &amp; Educational Use Only
             </div>
         </div>
     </footer>

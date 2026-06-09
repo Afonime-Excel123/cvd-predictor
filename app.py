@@ -1,122 +1,106 @@
 # ============================================================
-# app.py — CVD RISK PREDICTION API
+# app.py — CVD RISK PREDICTION API  (UCI Heart Disease Dataset)
 # ============================================================
-# This is the Flask backend. Its only jobs are:
-#   1. Serve the frontend (HTML page)
-#   2. Accept user health data from the form
-#   3. Load the saved Random Forest model
-#   4. Run the prediction (no scaling needed for RF)
-#   5. Return the risk result back to the frontend
-#
-# WHAT CHANGED FROM THE ORIGINAL:
-#   - model file is now cvd_model_rf.pkl (Random Forest)
-#   - We no longer scale the input before predicting.
-#     Random Forest makes decisions using split thresholds
-#     ("is age > 55?") — the actual magnitude of numbers
-#     doesn't matter, so scaling has zero effect on it.
-#     Removing it keeps the pipeline cleaner and correct.
+# WHAT CHANGED FROM THE PREVIOUS VERSION:
+#   - Dataset: Framingham → UCI Heart Disease (Cleveland)
+#   - Features: 14 Framingham fields → 13 UCI fields
+#   - Target: 10-year CVD risk → current heart disease detection
+#   - No scaling needed (Random Forest, same as before)
+#   - Better balanced dataset (54%/46%) → model accuracy: 83.6%
 # ============================================================
 
 from flask import Flask, request, jsonify, render_template
 import joblib
 import numpy as np
 
-# ── Create the Flask app ────────────────────────────────────
 app = Flask(__name__)
 
-# ── Load the Random Forest model once at startup ────────────
-# We no longer need to load the scaler — RF doesn't use it.
-# Loading outside the route means it happens once, not on
-# every single request (which would be very slow).
+# Load the Random Forest model trained on UCI Heart Disease data
 model = joblib.load('model/cvd_model_rf.pkl')
 
-print("✅ Random Forest model loaded successfully")
+print("✅ Random Forest model (UCI Heart Disease) loaded successfully")
 
 
-# ── Route 1: Serve the frontend ─────────────────────────────
 @app.route('/')
 def home():
     return render_template('index.html')
 
 
-# ── Route 2: Handle the prediction ──────────────────────────
 @app.route('/predict', methods=['POST'])
 def predict():
 
     data = request.get_json()
 
-    # ── Extract each field from the incoming data ────────────
-    # The order here MUST match the column order we trained with:
-    # ['male', 'age', 'currentSmoker', 'cigsPerDay', 'BPMeds',
-    #  'prevalentStroke', 'prevalentHyp', 'diabetes', 'totChol',
-    #  'sysBP', 'diaBP', 'BMI', 'heartRate', 'glucose']
+    # ── UCI Heart Disease feature order (MUST match training columns) ────
+    # ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs',
+    #  'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
     #
-    # Note: 'education' was dropped during training, so we
-    # do NOT include it here either.
+    # cp       → Chest pain type (0=typical angina, 1=atypical, 2=non-anginal, 3=asymptomatic)
+    # trestbps → Resting blood pressure (mmHg)
+    # chol     → Serum cholesterol (mg/dL)
+    # fbs      → Fasting blood sugar >120 mg/dL (1=yes, 0=no)
+    # restecg  → Resting ECG results (0=normal, 1=ST-T abnormality, 2=LV hypertrophy)
+    # thalach  → Max heart rate achieved
+    # exang    → Exercise-induced angina (1=yes, 0=no)
+    # oldpeak  → ST depression induced by exercise
+    # slope    → Slope of peak exercise ST segment (0=upsloping, 1=flat, 2=downsloping)
+    # ca       → Number of major vessels coloured by fluoroscopy (0–3)
+    # thal     → Thalassemia (1=normal, 2=fixed defect, 3=reversible defect)
     try:
         features = [
-            float(data['male']),
             float(data['age']),
-            float(data['currentSmoker']),
-            float(data['cigsPerDay']),
-            float(data['BPMeds']),
-            float(data['prevalentStroke']),
-            float(data['prevalentHyp']),
-            float(data['diabetes']),
-            float(data['totChol']),
-            float(data['sysBP']),
-            float(data['diaBP']),
-            float(data['BMI']),
-            float(data['heartRate']),
-            float(data['glucose'])
+            float(data['sex']),
+            float(data['cp']),
+            float(data['trestbps']),
+            float(data['chol']),
+            float(data['fbs']),
+            float(data['restecg']),
+            float(data['thalach']),
+            float(data['exang']),
+            float(data['oldpeak']),
+            float(data['slope']),
+            float(data['ca']),
+            float(data['thal']),
         ]
     except KeyError as e:
         return jsonify({'error': f'Missing field: {str(e)}'}), 400
 
-    # ── Run the prediction ───────────────────────────────────
-    # reshape(1, -1) → treat this as one row with N columns.
-    # We pass it directly to the model — no scaling needed.
-    #
-    # predict()       → returns 0 or 1 (the final decision)
-    # predict_proba() → returns probability for each class
-    #   e.g. [0.68, 0.32] means 68% no CVD, 32% CVD risk
     input_array = np.array(features).reshape(1, -1)
 
     prediction    = model.predict(input_array)[0]
     probability   = model.predict_proba(input_array)[0]
-    cvd_risk_prob = round(probability[1] * 100, 1)
+    # In UCI dataset: target=1 means heart disease PRESENT
+    heart_disease_prob = round(probability[1] * 100, 1)
 
-    # ── Build the risk level and health message ──────────────
-    if cvd_risk_prob < 20:
+    if heart_disease_prob < 30:
         risk_level = "Low"
         message = (
-            "Your cardiovascular risk appears low. "
-            "Keep maintaining a healthy lifestyle — "
-            "regular exercise, balanced diet, and routine checkups."
+            "Your clinical profile suggests a low likelihood of heart disease. "
+            "Keep up regular exercise, a balanced diet, and annual checkups "
+            "to maintain your cardiovascular health."
         )
-    elif cvd_risk_prob < 50:
+    elif heart_disease_prob < 60:
         risk_level = "Moderate"
         message = (
-            "You have a moderate cardiovascular risk. "
-            "Consider reducing salt intake, exercising regularly, "
-            "and scheduling a checkup with your doctor."
+            "Your profile shows a moderate risk of heart disease. "
+            "Consider discussing your chest pain patterns, blood pressure, "
+            "and cholesterol levels with your doctor at your next visit."
         )
     else:
         risk_level = "High"
         message = (
-            "Your cardiovascular risk is high. "
-            "Please consult a doctor as soon as possible. "
-            "Lifestyle changes and medical guidance are strongly advised."
+            "Your clinical indicators suggest a high likelihood of heart disease. "
+            "Please consult a cardiologist as soon as possible. "
+            "Early diagnosis and lifestyle changes can make a significant difference."
         )
 
     return jsonify({
         'prediction': int(prediction),
         'risk_level': risk_level,
-        'probability': cvd_risk_prob,
+        'probability': heart_disease_prob,
         'message': message
     })
 
 
-# ── Start the server ─────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True)
